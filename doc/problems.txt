@@ -1,0 +1,45 @@
+
+
+gotitguy====》
+
+https://leads.gotitguy.com/new_api/api.php
+Array
+(
+    [Key] => V53927FKsIFcU0F9Z7Uvs7rDsTOSZ5lvsTp9Z7owWwlKswJS2HWSdEO
+    [API_Action] => pingPostLead
+    [Mode] => ping
+    [Return_Best_Price] => 1
+    [TYPE] => 47
+    [SRC] => ToLocal_Solar
+    [Pub_ID] => 1070
+    [Landing_Page] => http://national-solar-rebate.com
+    [st_t] => st_t
+    [Home_Shaded] => Mostly Sunny
+    [Homeowner] => Yes
+    [Electric_Bill] => $150 - $200
+    [UNIVERSAL_LEAD_ID] => 39RM7YXI-4AX9-3XRL-U98M-9O2EXKBTF1Z8
+    [Zip] => 99801
+    [Electricity_Company_1] => Other
+    [State] => AK
+)
+
+<?xml version="1.0" encoding="utf-8"?>
+<response><status>Error</status><errors><error>Authentication failed</error></errors></response>
+
+
+reallygreatrate=====》
+https://www.reallygreatrate.com/api/ping/index.php
+Array
+(
+    [api_key] => e41eb329b2f84f1c72ce02bb359616a2
+    [publisher_id] => 984
+    [rcid] => 5330
+    [field_3] => Yes
+    [field_4] => 200
+    [field_13] => 7518ISDT-8RT2-FBN8-HEDW-QOVWHU6BCGA0
+    [zip] => 99548
+    [Electricity_Company_1] => Sitka Electric
+    [field_2] => AK
+)
+
+{"status":"failed","errors":["No State provided"]}
