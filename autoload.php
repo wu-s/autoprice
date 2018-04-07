@@ -28,4 +28,6 @@ function my_autoload($class){
 
 spl_autoload_register("my_autoload");
 
+require '../vendor/autoload.php';
+
 DB::getInstanse($pdo_config);

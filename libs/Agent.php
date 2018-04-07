@@ -6,6 +6,8 @@
  * Time: 下午8:52
  */
 
+use JMathai\PhpMultiCurl\MultiCurl;
+
 class Agent {
 
     const CHARS = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ';
@@ -58,18 +60,25 @@ class Agent {
             return;
         }
 
+        $mc = MultiCurl::getInstance();
+
         $ch = curl_init();
         curl_setopt($ch, CURLOPT_URL, $this->url);
         curl_setopt($ch, CURLOPT_HEADER, 0);
         curl_setopt($ch, CURLOPT_POST, 1);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
         curl_setopt($ch, CURLOPT_POSTFIELDS, $this->params);
-        $this->response = curl_exec($ch);
+        curl_setopt($ch, CURLOPT_TIMEOUT,60);
+
+        $call = $mc->addCurl($ch);
+        $code = $call->code;
+        $this->response = $call->getResult();
+//        $this->response = curl_exec($ch);
         print_r($this->url);
         print_r($this->params);
         print_r($this->response);
 
-        curl_close($ch);
+//        curl_close($ch);
 
 //        Log::debug('aaaa='.$data.'=bbbb');
     }
