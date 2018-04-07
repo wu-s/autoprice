@@ -9,11 +9,18 @@
 class Gotitguy extends Agent {
 
 
+    public function mockResponse(){
+        return <<<__RESPONSE__
+<?xml version="1.0" encoding="utf-8"?>
+<response><status>Success</status><lead_id>1475841</lead_id></response>
+__RESPONSE__;
+
+    }
 
     protected function init($data){
         $this->url = "https://leads.gotitguy.com/new_api/api.php";
         $this->params = array(
-            'Key'               => 'V53927FKsIFcU0F9Z7Uvs7rDsTOSZ5lvsTp9Z7owWwlKswJS2HWSdEO',
+            'Key'               => 'V53927FKsIFcU0F9Z7Uvs7rDsTOSZ5lvsTp9Z7owWwlKswJS2HWSdEO-iljj',
             'API_Action'        => 'pingPostLead',
             'Mode'              => 'ping',
             'Return_Best_Price' => 1,

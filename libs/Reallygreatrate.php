@@ -7,6 +7,14 @@
  */
 
 class Reallygreatrate extends Agent {
+
+    public function mockResponse(){
+        return <<<__RESPONSE__
+{"status":"success","ping_id":1252185409,"price":0,"expires":1523070084}
+__RESPONSE__;
+
+    }
+
     protected function init($data){
         $this->url = "https://www.reallygreatrate.com/api/ping/index.php";
         $this->params = array(
@@ -16,9 +24,9 @@ class Reallygreatrate extends Agent {
             'field_3'               => 'Yes',
             'field_4'               => 200,
             'field_13'              => $this->createLeadToken(),
+            'state'                 => $data['State'],
             'zip'                   => $data['Zip'],
-            'Electricity_Company_1' => $data['Utility_Provider'],
-            'field_2'               => $data['State']
+            'field_2'               => $data['Utility_Provider'],
         );
     }
 

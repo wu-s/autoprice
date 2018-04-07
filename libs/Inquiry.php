@@ -20,11 +20,11 @@ class Inquiry {
     const MOCK_MODE = false;
 //    const MOCK_MODE = true;
 
-    public function init($csv){
+    public function init($csv, $inquiry_time){
         $sample = new Sample();
         $sample->init($csv);
         $this->data = $sample->getSampleData(20);
-        $this->inquiry_time = date('Y-m-d H:i:s', time());
+        $this->inquiry_time = $inquiry_time;
     }
 
     private function formatInquryRecord($row, $type = 1, Agent $agent = null){
@@ -36,10 +36,18 @@ class Inquiry {
             $agent->getPrice(),
             $type,
             $agent->getUrl(),
-            $agent->getParams(),
+            $this->formatParam($agent->getParams()),
             $agent->getResponse(),
         );
 
+    }
+
+    private function formatParam($params){
+        $rtn = array();
+        foreach($params as $k => $v){
+            $rtn[] = $k . '=' . urlencode($v);
+        }
+        return join('&', $rtn);
     }
 
     public function run(){
@@ -48,21 +56,21 @@ class Inquiry {
         $hilprod = new Hilprod();
         $leadgenesis = new Leadgenesis();
         $realygreatrate = new Reallygreatrate();
-        $inquiry_record = array();
-        $inquiry_log = array();
+//        $inquiry_record = array();
+//        $inquiry_log = array();
 
         $db = DB::getInstanse();
 
-        $sql = 'insert into inquiry_record (`inquiry_time`, `state`, `zip`, `utility_provider`, `price`, `type`, `insert_date`, `update_date`, `url`, `params`, `response`) values(?, ?, ?, ?, ?, ?, ?, now(), now(), ?, ?, ?)';
+        $sql = 'insert into inquiry_record (`inquiry_time`, `state`, `zip`, `utility_provider`, `price`, `type`, `insert_date`, `update_date`, `url`, `params`, `response`) values(?, ?, ?, ?, ?, ?, now(), now(), ?, ?, ?)';
         $sth = $db->prepare($sql);
 
         foreach($this->data as $v){
             foreach($v as $row){
 
-//                $gotigay->run($row, self::MOCK_MODE);
-//                $sth->execute($this->formatInquryRecord($row, self::TYPE_GOTITGUY, $gotigay));
-//                $price = $gotigay->getPrice();
-//                Log::debug("price = " . $price);
+                $gotigay->run($row, self::MOCK_MODE);
+                $sth->execute($this->formatInquryRecord($row, self::TYPE_GOTITGUY, $gotigay));
+                $price = $gotigay->getPrice();
+                Log::debug("price = " . $price);
 
                 $hilprod->run($row, self::MOCK_MODE);
                 $price = $hilprod->getPrice();
@@ -76,14 +84,14 @@ class Inquiry {
                 Log::debug("price = " . $price);
 
 
-//                $realygreatrate->run($row, self::MOCK_MODE);
-//                $sth->execute($this->formatInquryRecord($row, self::TYPE_REALLYGREATRATE, $realygreatrate));
-//                $price = $realygreatrate->getPrice();
-//                Log::debug("price = " . $price);
+                $realygreatrate->run($row, self::MOCK_MODE);
+                $sth->execute($this->formatInquryRecord($row, self::TYPE_REALLYGREATRATE, $realygreatrate));
+                $price = $realygreatrate->getPrice();
+                Log::debug("price = " . $price);
 
-                break;
+//                break;
             }
-            break;
+//            break;
         }
     }
 } 

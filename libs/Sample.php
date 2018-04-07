@@ -30,13 +30,13 @@ class Sample {
         $this->data = $result;
     }
 
-    public function getSampleData($limit = 20, $state = 'NJ'){
+    public function getSampleData($limit = 20){
         $data = array();
         $rtn = array();
         foreach($this->data as $row){
-            if($row['State'] != $state){
-                continue;
-            }
+//            if($row['State'] != $state){
+//                continue;
+//            }
             $data[$row['State']][] = $row;
         }
         foreach($data as $state => $v){
