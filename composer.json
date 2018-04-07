@@ -1,5 +1,6 @@
 {
     "require": {
-        "jmathai/php-multi-curl": "dev-master"
+        "jmathai/php-multi-curl": "dev-master",
+        "swiftmailer/swiftmailer": "^6.0"
     }
 }

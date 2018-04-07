@@ -46,6 +46,6 @@ __RESPONSE__;
         $this->price = isset($rtn['price']) ? $rtn['price'] : 0;
 //        Log::debug("test");
         $this->result = $rtn;
-        Log::debug($rtn);
+//        Log::debug($rtn);
     }
 } 

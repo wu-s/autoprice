@@ -15,17 +15,26 @@ class Agent {
     protected $url;
     protected $params;
     protected $response;
+    protected $code;
     protected $result;
     protected $price;
     protected $mock;
+    protected $call;
+    protected $data;
 
     public function run($data, $mock = false){
         $this->mock = $mock;
+        $this->data = $data;
         $this->init($data);
 //        Log::debug($this->url);
 //        Log::debug($this->params);
 //        print_r($this->result);
         $this->requestPost();
+
+    }
+
+    public function result(){
+        $this->getRequest();
         $this->parse();
     }
 
@@ -45,8 +54,24 @@ class Agent {
         return $this->response;
     }
 
-    public function log(){
+    public function getCode(){
+        return $this->code;
+    }
 
+    public function getData(){
+        return $this->data;
+    }
+
+    public function log(){
+        $p = array(
+            'state'             =>  $this->data['State'],
+            'zip'	            =>  $this->data['Zip'],
+            'utility_provider'  =>  $this->data['Utility_Provider'],
+            'price'             =>  $this->getPrice(),
+            'params'            =>  $this->getParams(),
+            'code'              =>  $this->getCode()
+        );
+        Log::debug(json_encode($p));
     }
 
     public function mockResponse(){
@@ -71,16 +96,24 @@ class Agent {
         curl_setopt($ch, CURLOPT_TIMEOUT,60);
 
         $call = $mc->addCurl($ch);
-        $code = $call->code;
-        $this->response = $call->getResult();
+        $this->call = $call;
+//        $this->code = $call->code;
+//        $this->response = $call->response;
 //        $this->response = curl_exec($ch);
-        print_r($this->url);
-        print_r($this->params);
-        print_r($this->response);
+
 
 //        curl_close($ch);
 
 //        Log::debug('aaaa='.$data.'=bbbb');
+    }
+
+    protected function getRequest(){
+        $call = $this->call;
+        $this->code = $call->code;
+        $this->response = $call->response;
+//        print_r($this->url);
+//        print_r($this->params);
+//        print_r($this->response);
     }
 
     protected function createLeadToken(){

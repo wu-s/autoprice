@@ -13,9 +13,13 @@ class Inquiry {
     const TYPE_LEADGENESIS = 3;
     const TYPE_REALLYGREATRATE = 4;
 
+    const CONCURRENCY_NUM = 5;
+
     private $data;
     private $result = array();
     private $inquiry_time;
+
+    private $concurrency = 0;
 
     const MOCK_MODE = false;
 //    const MOCK_MODE = true;
@@ -27,10 +31,12 @@ class Inquiry {
         $this->inquiry_time = $inquiry_time;
     }
 
-    private function formatInquryRecord($row, $type = 1, Agent $agent = null){
+    private function formatInquryRecord($type = 1, Agent $agent = null){
+        $row = $agent->getData();
         return array(
             $this->inquiry_time,   //inquiry_time
             $row['State'], //state
+            $agent->getCode(),
             $row['Zip'],    //zip
             $row['Utility_Provider'], //
             $agent->getPrice(),
@@ -52,43 +58,60 @@ class Inquiry {
 
     public function run(){
 
-        $gotigay = new Gotitguy();
-        $hilprod = new Hilprod();
-        $leadgenesis = new Leadgenesis();
-        $realygreatrate = new Reallygreatrate();
-//        $inquiry_record = array();
-//        $inquiry_log = array();
+        $gotigayObjs = array();
+        $hilprodObjs = array();
+        $leadgenesisObjs = array();
+        $realygreatrateObjs = array();
+
+        for($i = 0; $i < self::CONCURRENCY_NUM; $i ++){
+            $gotigayObjs[] = new Gotitguy();
+            $hilprodObjs[] = new Hilprod();
+            $leadgenesisObjs[] = new Leadgenesis();
+            $realygreatrateObjs[] = new Reallygreatrate();
+        }
 
         $db = DB::getInstanse();
 
-        $sql = 'insert into inquiry_record (`inquiry_time`, `state`, `zip`, `utility_provider`, `price`, `type`, `insert_date`, `update_date`, `url`, `params`, `response`) values(?, ?, ?, ?, ?, ?, now(), now(), ?, ?, ?)';
+        $sql = 'insert into inquiry_record (`inquiry_time`, `state`, `code`, `zip`, `utility_provider`, `price`, `type`, `insert_date`, `update_date`, `url`, `params`, `response`) values(?, ?, ?, ?, ?, ?, ?, now(), now(), ?, ?, ?)';
         $sth = $db->prepare($sql);
 
-        foreach($this->data as $v){
+        $this->concurrency = 0;
+
+        foreach($this->data as $state => $v){
             foreach($v as $row){
+                if($this->concurrency >= self::CONCURRENCY_NUM){
+                    for($i = 0; $i < self::CONCURRENCY_NUM; $i ++){
+                        Log::debug("\n\n=================================\n\n");
+                        $gotigay = $gotigayObjs[$i];
+                        $gotigay->result();
+                        $sth->execute($this->formatInquryRecord(self::TYPE_GOTITGUY, $gotigay));
+                        $gotigay->log();
 
-                $gotigay->run($row, self::MOCK_MODE);
-                $sth->execute($this->formatInquryRecord($row, self::TYPE_GOTITGUY, $gotigay));
-                $price = $gotigay->getPrice();
-                Log::debug("price = " . $price);
+                        $hilprod = $hilprodObjs[$i];
+                        $hilprod->result();
+                        $sth->execute($this->formatInquryRecord(self::TYPE_HILPROD, $hilprod));
+                        $hilprod->log();
 
-                $hilprod->run($row, self::MOCK_MODE);
-                $price = $hilprod->getPrice();
-                $sth->execute($this->formatInquryRecord($row, self::TYPE_HILPROD, $hilprod));
-                Log::debug("price = " . $price);
+                        $leadgenesis = $leadgenesisObjs[$i];
+                        $leadgenesis->result();
+                        $sth->execute($this->formatInquryRecord(self::TYPE_LEADGENESIS, $leadgenesis));
+                        $leadgenesis->log();
 
+                        $realygreatrate = $realygreatrateObjs[$i];
+                        $realygreatrate->result();
+                        $sth->execute($this->formatInquryRecord(self::TYPE_REALLYGREATRATE, $realygreatrate));
+                        $realygreatrate->log();
+                    }
 
-                $leadgenesis->run($row, self::MOCK_MODE);
-                $sth->execute($this->formatInquryRecord($row, self::TYPE_LEADGENESIS, $leadgenesis));
-                $price = $leadgenesis->getPrice();
-                Log::debug("price = " . $price);
+                    $this->concurrency = 0;
+                }
 
+                $gotigayObjs[$this->concurrency]->run($row, self::MOCK_MODE);
+                $hilprodObjs[$this->concurrency]->run($row, self::MOCK_MODE);
+                $leadgenesisObjs[$this->concurrency]->run($row, self::MOCK_MODE);
+                $realygreatrateObjs[$this->concurrency]->run($row, self::MOCK_MODE);
 
-                $realygreatrate->run($row, self::MOCK_MODE);
-                $sth->execute($this->formatInquryRecord($row, self::TYPE_REALLYGREATRATE, $realygreatrate));
-                $price = $realygreatrate->getPrice();
-                Log::debug("price = " . $price);
-
+                $this->concurrency ++;
 //                break;
             }
 //            break;

@@ -7,4 +7,5 @@ $baseDir = dirname($vendorDir);
 
 return array(
     'JMathai\\PhpMultiCurl\\' => array($vendorDir . '/jmathai/php-multi-curl/src'),
+    'Egulias\\EmailValidator\\' => array($vendorDir . '/egulias/email-validator/EmailValidator'),
 );
