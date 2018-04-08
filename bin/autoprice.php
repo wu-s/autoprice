@@ -12,14 +12,14 @@ function run(){
     $inquiry->init($csv, $inquiry_time);
     $inquiry->run();
 
-//    $inquiry_time = '2018-04-07 11:11:42';
+//    $inquiry_time = '2018-04-07 12:24:24';
     $report = new Report();
     $report->init($inquiry_time);
     $r1 = $report->getPriceByState();
     $r2 = $report->getPriceChangeOver50ByState();
     $f1 = ROOT_DIR.'tmp/report_state.csv';
     $f2 = ROOT_DIR.'tmp/report_price_change_over_50_percents.csv';
-    writeCsv(array_values($r1), $f1);
+    writeCsv($r1, $f1);
     writeCsv($r2, $f2);
 
     $transport = (new Swift_SmtpTransport('smtp.qq.com', 465))
