@@ -4,8 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "b2d5b8aea961b637d215ca2b59b8b989",
-    "content-hash": "f617ba45810350afd84b0b8449b08720",
+    "content-hash": "de10c1a14b4ab24543056990709282bf",
     "packages": [
         {
             "name": "doctrine/lexer",
@@ -59,7 +58,7 @@
                 "lexer",
                 "parser"
             ],
-            "time": "2014-09-09 13:34:57"
+            "time": "2014-09-09T13:34:57+00:00"
         },
         {
             "name": "egulias/email-validator",
@@ -116,7 +115,7 @@
                 "validation",
                 "validator"
             ],
-            "time": "2017-11-15 23:40:40"
+            "time": "2017-11-15T23:40:40+00:00"
         },
         {
             "name": "jmathai/php-multi-curl",
@@ -152,7 +151,7 @@
                 "parallel",
                 "php-multi-curl"
             ],
-            "time": "2016-12-03 03:27:02"
+            "time": "2016-12-03T03:27:02+00:00"
         },
         {
             "name": "swiftmailer/swiftmailer",
@@ -207,7 +206,7 @@
                 "mail",
                 "mailer"
             ],
-            "time": "2017-09-30 22:39:41"
+            "time": "2017-09-30T22:39:41+00:00"
         }
     ],
     "packages-dev": [],
