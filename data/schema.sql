@@ -4,6 +4,7 @@ CREATE TABLE `inquiry_record` (
   `state` varchar(2) COLLATE utf8_unicode_ci NOT NULL,
   `zip` varchar(8) COLLATE utf8_unicode_ci NOT NULL,
   `code` int(11) DEFAULT NULL,
+  `success` int(11) DEFAULT 0,
   `utility_provider` varchar(100) COLLATE utf8_unicode_ci NOT NULL,
   `price` decimal(12,2) NOT NULL DEFAULT '0.00',
   `type` int(11) NOT NULL DEFAULT '1',

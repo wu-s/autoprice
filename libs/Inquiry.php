@@ -38,6 +38,7 @@ class Inquiry {
             $row['State'], //state
             $agent->getCode(),
             $row['Zip'],    //zip
+            $agent->isSuccess(),
             $row['Utility_Provider'], //
             $agent->getPrice(),
             $type,
@@ -72,7 +73,7 @@ class Inquiry {
 
         $db = DB::getInstanse();
 
-        $sql = 'insert into inquiry_record (`inquiry_time`, `state`, `code`, `zip`, `utility_provider`, `price`, `type`, `insert_date`, `update_date`, `url`, `params`, `response`) values(?, ?, ?, ?, ?, ?, ?, now(), now(), ?, ?, ?)';
+        $sql = 'insert into inquiry_record (`inquiry_time`, `state`, `code`, `zip`, `success`, `utility_provider`, `price`, `type`, `insert_date`, `update_date`, `url`, `params`, `response`) values(?, ?, ?, ?, ?, ?, ?, ?, now(), now(), ?, ?, ?)';
         $sth = $db->prepare($sql);
 
         $this->concurrency = 0;
