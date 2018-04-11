@@ -27,7 +27,7 @@ class Report {
     }
 
     private function getPriceByStateAndInquiryTime($inquiry_time){
-        $sql = 'select `state`, `zip`, `utility_provider`, max(price) as price from inquiry_record where inquiry_time = ? group by `state`, `zip`, `utility_provider`';
+        $sql = 'select `state`, `zip`, `utility_provider`, max(price) as price from inquiry_record where `code` = 200 and inquiry_time = ? group by `state`, `zip`, `utility_provider`';
         $sth = $this->db->prepare($sql);
         $sth->execute(array($inquiry_time));
         $data = $sth->fetchAll();
