@@ -21,10 +21,12 @@ class Agent {
     protected $mock;
     protected $call;
     protected $data;
+    protected $success;
 
     public function run($data, $mock = false){
         $this->mock = $mock;
         $this->data = $data;
+        $this->success = 0;
         $this->init($data);
 //        Log::debug($this->url);
 //        Log::debug($this->params);
@@ -60,6 +62,10 @@ class Agent {
 
     public function getData(){
         return $this->data;
+    }
+
+    public function isSuccess(){
+        return $this->success && $this->getCode();
     }
 
     public function log(){
