@@ -29,7 +29,7 @@ function run(){
     $mailer = new Swift_Mailer($transport);
     $message = (new Swift_Message('autoprice report'))
         ->setFrom(['214190413@qq.com' => 'John Doe'])
-        ->setTo(['2205935650@qq.com', ])
+        ->setTo(['2205935650@qq.com', 'keater@gmail.com', ])
         ->setBody('Here is the message itself')
     ;
     if($r1){
