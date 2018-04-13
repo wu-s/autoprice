@@ -99,7 +99,8 @@ class Agent {
         curl_setopt($ch, CURLOPT_POST, 1);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
         curl_setopt($ch, CURLOPT_POSTFIELDS, $this->params);
-        curl_setopt($ch, CURLOPT_TIMEOUT,60);
+        curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 0);
+        curl_setopt($ch, CURLOPT_TIMEOUT,90);
 
         $call = $mc->addCurl($ch);
         $this->call = $call;
