@@ -6,6 +6,8 @@
  * Time: 下午8:52
  */
 
+use JMathai\PhpMultiCurl\MultiCurl;
+
 class Agent {
 
     const CHARS = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ';
@@ -13,17 +15,28 @@ class Agent {
     protected $url;
     protected $params;
     protected $response;
+    protected $code;
     protected $result;
     protected $price;
     protected $mock;
+    protected $call;
+    protected $data;
+    protected $success;
 
     public function run($data, $mock = false){
         $this->mock = $mock;
+        $this->data = $data;
+        $this->success = 0;
         $this->init($data);
 //        Log::debug($this->url);
 //        Log::debug($this->params);
 //        print_r($this->result);
         $this->requestPost();
+
+    }
+
+    public function result(){
+        $this->getRequest();
         $this->parse();
     }
 
@@ -43,8 +56,28 @@ class Agent {
         return $this->response;
     }
 
-    public function log(){
+    public function getCode(){
+        return $this->code;
+    }
 
+    public function getData(){
+        return $this->data;
+    }
+
+    public function isSuccess(){
+        return $this->success && $this->getCode();
+    }
+
+    public function log(){
+        $p = array(
+            'state'             =>  $this->data['State'],
+            'zip'	            =>  $this->data['Zip'],
+            'utility_provider'  =>  $this->data['Utility_Provider'],
+            'price'             =>  $this->getPrice(),
+            'params'            =>  $this->getParams(),
+            'code'              =>  $this->getCode()
+        );
+        Log::debug(json_encode($p));
     }
 
     public function mockResponse(){
@@ -58,20 +91,36 @@ class Agent {
             return;
         }
 
+        $mc = MultiCurl::getInstance();
+
         $ch = curl_init();
         curl_setopt($ch, CURLOPT_URL, $this->url);
         curl_setopt($ch, CURLOPT_HEADER, 0);
         curl_setopt($ch, CURLOPT_POST, 1);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
         curl_setopt($ch, CURLOPT_POSTFIELDS, $this->params);
-        $this->response = curl_exec($ch);
-        print_r($this->url);
-        print_r($this->params);
-        print_r($this->response);
+        curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 0);
+        curl_setopt($ch, CURLOPT_TIMEOUT,90);
 
-        curl_close($ch);
+        $call = $mc->addCurl($ch);
+        $this->call = $call;
+//        $this->code = $call->code;
+//        $this->response = $call->response;
+//        $this->response = curl_exec($ch);
+
+
+//        curl_close($ch);
 
 //        Log::debug('aaaa='.$data.'=bbbb');
+    }
+
+    protected function getRequest(){
+        $call = $this->call;
+        $this->code = $call->code;
+        $this->response = $call->response;
+//        print_r($this->url);
+//        print_r($this->params);
+//        print_r($this->response);
     }
 
     protected function createLeadToken(){

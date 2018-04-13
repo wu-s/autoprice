@@ -8,6 +8,8 @@
 
 class Sample {
 
+    const ZIP_CODE_LENGTH = 5;
+
     private $csv;
     private $data;
 
@@ -37,6 +39,7 @@ class Sample {
 //            if($row['State'] != $state){
 //                continue;
 //            }
+            $row['Zip'] = str_pad($row['Zip'], self::ZIP_CODE_LENGTH, '0', STR_PAD_LEFT);
             $data[$row['State']][] = $row;
         }
         foreach($data as $state => $v){

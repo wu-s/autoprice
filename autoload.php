@@ -21,11 +21,11 @@ function my_autoload($class){
     $fn = ROOT_DIR."libs/".$class.".php";
     if(file_exists($fn)){
         require_once($fn);
-    }else{
-        die("$fn does not exists!");
     }
 }
 
 spl_autoload_register("my_autoload");
+
+require ROOT_DIR.'vendor/autoload.php';
 
 DB::getInstanse($pdo_config);

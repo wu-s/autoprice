@@ -33,6 +33,7 @@ __RESPONSE__;
     protected function parse(){
         $rtn = json_decode($this->response, true);
         $this->price = isset($rtn['price']) ? $rtn['price'] : 0;
+        $this->success = isset($rtn['status']) && $rtn['status'] == 'success' ? 1 : 0;
         $this->result = $rtn;
         Log::debug($rtn);
     }

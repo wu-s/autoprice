@@ -35,6 +35,7 @@ __RESPONSE__;
         $json = json_encode($xml);
         $rtn = json_decode($json, true);
         $this->price = isset($rtn['price']) ? $rtn['price'] : 0;
+        $this->success = isset($rtn['code']) && $rtn['code'] == '0' ? 1 : 0;
 //        Log::debug("test");
         $this->result = $rtn;
         Log::debug($rtn);

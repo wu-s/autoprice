@@ -17,9 +17,19 @@ class Report {
     }
 
     public function getPriceByState(){
+        $data = $this->getPriceByStateAndInquiryTime($this->inquiry_time);
+        $rtn = array_values($data);
+        usort($rtn, function($a, $b){
+            if($a['avg_price'] == $b['avg_price']) return 0;
+            return ($a['avg_price'] > $b['avg_price']) ? -1 : 1;
+        });
+        return $rtn;
+    }
+
+    private function getPriceByStateAndInquiryTime($inquiry_time){
         $sql = 'select `state`, `zip`, `utility_provider`, max(price) as price from inquiry_record where inquiry_time = ? group by `state`, `zip`, `utility_provider`';
         $sth = $this->db->prepare($sql);
-        $sth->execute(array($this->inquiry_time));
+        $sth->execute(array($inquiry_time));
         $data = $sth->fetchAll();
 //        print_r($data);
         $rtn = array();
@@ -52,8 +62,11 @@ class Report {
         if(!$lastInquiryTime){
             return;
         }
-        $currentReport = $this->getPriceByState();
-        $lastReport = $this->getPriceByState();
+//        print_r($lastInquiryTime);
+        $currentReport = $this->getPriceByStateAndInquiryTime($this->inquiry_time);
+        $lastReport = $this->getPriceByStateAndInquiryTime($lastInquiryTime);
+//        print_r($currentReport);
+//        print_r($lastReport);
         $states = array_unique(array_merge(array_keys($currentReport), array_keys($lastReport)));
 //        print_r($states);
 //        print_r(array_keys($currentReport));
@@ -75,19 +88,50 @@ class Report {
                 $tmp['current_max_price'] = $currentReport[$state]['max_price'];
                 $tmp['current_avg_price'] = $currentReport[$state]['avg_price'];
             }
+
+            //前一次和当前，一方没有价格，一方价格为0，忽略
+            if(!isset($currentReport[$state]) && isset($lastReport[$state]) && intval($lastReport[$state]['avg_price'])==0){
+                continue;
+            }
+            if(!isset($lastReport[$state]) && isset($currentReport[$state]) && intval($currentReport[$state]['avg_price'])==0){
+                continue;
+            }
+            //前一次和当前价格都为0，忽略
+            if(intval($lastReport[$state]['avg_price'])==0 && intval($currentReport[$state]['avg_price'])==0){
+                continue;
+            }
+
+
             if(!isset($lastReport[$state]) || !isset($currentReport[$state])){
                 $rtn[] = $tmp;
                 continue;
             }
-            if(intval($lastReport[$state]['avg_price'])==0 && intval($currentReport[$state]['avg_price'])==0){
-                continue;
-            }
+
             $diff = $currentReport[$state]['avg_price'] - $lastReport[$state]['avg_price'];
-            if(intval($lastReport[$state]['avg_price'])==0 || $diff / $lastReport[$state]['avg_price'] > 0.5){
-                $tmp['diff'] = round($diff / $lastReport[$state]['avg_price'], 2);
+            if($lastReport[$state]['avg_price'] * 10000 == 0){    //前一次价格为0时，忽略
+                $tmp['diff'] = 120;
+            } elseif ( $diff / $lastReport[$state]['avg_price'] > -0.5 && $diff / $lastReport[$state]['avg_price'] < 0.5){   //变动幅度小于50%,忽略
+                continue;
+            } else {  //变动幅度>=50%
+                $tmp['diff'] = round($diff / $lastReport[$state]['avg_price'], 3) * 100;
             }
             $rtn[] = $tmp;
         }
+
+
+
+        //按照变化比例生序排列
+        usort($rtn, function($a, $b){
+            if( $a['diff'] == $b['diff'] ) return 0;
+            return $a['diff'] > $b['diff'] ? 1 : -1;
+        });
+
+        foreach($rtn as $i => $v){
+            $rtn[$i]['diff'] = $rtn[$i]['diff'] . '%';
+        }
+
+//                print_r($rtn);
+
         return $rtn;
     }
 
