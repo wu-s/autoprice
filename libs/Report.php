@@ -26,6 +26,38 @@ class Report {
         return $rtn;
     }
 
+    public function getInquiryTime(){
+        $sql = 'select distinct inquiry_time from inquiry_record order by inquiry_time';
+        $sth = $this->db->prepare($sql);
+        $sth->execute();
+        $data = $sth->fetchAll();
+        $rtn = array();
+        foreach($data as $row){
+            $rtn[] = $row['inquiry_time'];
+        }
+        return $rtn;
+    }
+
+    public function getAvgPriceHistoryByState(){
+        $inquiry_times = $this->getInquiryTime();
+//        print_r($inquiry_times);
+        $result = array();
+        foreach($inquiry_times as $inquiry_time){
+            $data = $this->getPriceByStateAndInquiryTime($inquiry_time);
+//            print_r($data);
+//            print_r($inquiry_time);
+            foreach($data as $state => $price){
+                $tmp = array(
+                    'inquiry_time'  => $inquiry_time,
+                    'max_price'     => $price['max_price'],
+                    'avg_price'     => $price['avg_price'],
+                );
+                $result[$state][] = $tmp;
+            }
+        }
+        return $result;
+    }
+
     private function getPriceByStateAndInquiryTime($inquiry_time){
         $sql = 'select `state`, `zip`, `utility_provider`, max(price) as price from inquiry_record where inquiry_time = ? group by `state`, `zip`, `utility_provider`';
         $sth = $this->db->prepare($sql);
