@@ -2,8 +2,8 @@
 /**
  * Created by PhpStorm.
  * User: wu-s
- * Date: 18/5/1
- * Time: 下午12:01
+ * Date: 18/5/2
+ * Time: 上午7:05
  */
 
 // 数据下载，下载最近一次所有州的post数据，或者指定州的数据。
@@ -25,3 +25,19 @@ $states = $sample->getStates();
 
 $inquiryData = $report->getPriceInquiryHistory($lastInquiryTime, $date);
 #print_r($inquiryData);
+
+header("Content-Type: text/csv");
+header("Content-Disposition: attachment; filename=inquiry_history_$lastInquiryTime.csv");
+header('Cache-Control:must-revalidate,post-check=0,pre-check=0');
+header('Expires:0');
+header('Pragma:public');
+
+if(!count($inquiryData)){
+    exit(0);
+}
+$header = $inquiryData[0];
+$fp = fopen ( 'php://output', 'a' );
+fputcsv($fp, array_keys($header));
+foreach($inquiryData as $v){
+    fputcsv($fp, array_values($v));
+}

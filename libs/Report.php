@@ -56,9 +56,9 @@ class Report
                     'inquiry_time'  => $inquiry_time,
                     'max_price' => $price['max_price'],
                     'avg_price' => $price['avg_price'],
-                    'start' => $state,
+                    'state' => $state,
                 );
-                $result[$inquiry_time][] = $tmp;
+                $result[$inquiry_time][$state] = $tmp;
             }
         }
         return $result;

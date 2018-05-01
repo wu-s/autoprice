@@ -11,15 +11,25 @@
 require_once(dirname(__FILE__) . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . 'autoload.php');
 
 $param = parseParam();
-print_r($param);
+//print_r($param);
 $startDate = $param[0];
 $endDate = $param[1];
 
 $report = new Report();
 $report->init($endDate);
 $r = $report->getAvgPriceHistoryByState($startDate, $endDate);
-print_r($r);
+//print_r($r);
 
+$sample = new Sample();
+$sample->init(ROOT_DIR . 'data/sample_data.csv');
+$states = $sample->getStates();
+
+$result = array();
+$result['state'] = $states;
+$result['price'] = $r;
+
+$callback = $_REQUEST['callback'];
+echo $callback.'('. json_encode($result) .')';
 
 function parseParam()
 {
