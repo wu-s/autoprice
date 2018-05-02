@@ -32,12 +32,12 @@ header('Cache-Control:must-revalidate,post-check=0,pre-check=0');
 header('Expires:0');
 header('Pragma:public');
 
-if(!count($inquiryData)){
+if (!count($inquiryData)) {
     exit(0);
 }
 $header = $inquiryData[0];
-$fp = fopen ( 'php://output', 'a' );
+$fp = fopen('php://output', 'a');
 fputcsv($fp, array_keys($header));
-foreach($inquiryData as $v){
+foreach ($inquiryData as $v) {
     fputcsv($fp, array_values($v));
 }

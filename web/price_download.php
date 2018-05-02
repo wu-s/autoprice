@@ -25,33 +25,33 @@ $sample->init(ROOT_DIR . 'data/sample_data.csv');
 $states = $sample->getStates();
 
 $result = array();
-foreach($states as $state){
+foreach ($states as $state) {
     $tmp = array();
     $tmp['state'] = $state;
-    foreach($r as $inquiryTime => $v){
-        if(isset($r[$inquiryTime][$state])){
+    foreach ($r as $inquiryTime => $v) {
+        if (isset($r[$inquiryTime][$state])) {
             $tmp[$inquiryTime] = $r[$inquiryTime][$state]['avg_price'];
-        }else{
+        } else {
             $tmp[$inquiryTime] = 0;
         }
     }
     $result[] = $tmp;
 }
 
-$filename = 'price_' . date('Y-m-d', strtotime($startDate)).'_'.date('Y-m-d', strtotime($endDate)).'.csv';
+$filename = 'price_' . date('Y-m-d', strtotime($startDate)) . '_' . date('Y-m-d', strtotime($endDate)) . '.csv';
 header("Content-Type: text/csv");
 header("Content-Disposition: attachment; filename=$filename");
 header('Cache-Control:must-revalidate,post-check=0,pre-check=0');
 header('Expires:0');
 header('Pragma:public');
 
-if(!count($result)){
+if (!count($result)) {
     exit(0);
 }
 $header = $result[0];
-$fp = fopen ( 'php://output', 'a' );
+$fp = fopen('php://output', 'a');
 fputcsv($fp, array_keys($header));
-foreach($result as $v){
+foreach ($result as $v) {
     fputcsv($fp, array_values($v));
 }
 
