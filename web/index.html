@@ -19,6 +19,8 @@
 </ul>
 <div id="myTabContent" class="tab-content">
     <div class="tab-pane fade in active" id="home">
+        <button type="button" class="btn btn-primary" id="state-price-button">下载</button>
+        <!--
         <table class="table table-bordered" id="state-price-table">
             <thead>
             <tr>
@@ -27,6 +29,7 @@
             </thead>
             </tbody>
         </table>
+        -->
     </div>
     <div class="tab-pane fade" id="ios">
         <!--
@@ -45,6 +48,14 @@
 
 <script type="text/javascript">
     $(document).ready(function(){
+        $('#data-inquiry').click(function(){
+            window.location.href="download.php";
+        });
+
+        $('#state-price-button').click(function(){
+            window.location.href="price_download.php";
+        });
+        /*
         $.ajax({
             method: "GET",
             url: "reports.php",
@@ -74,13 +85,9 @@
                     $('#state-price-table').append(html);
 
                     $('#state-dropdown-menu').append('<li role="presentation"><a role="menuitem" tabindex="-1" href="#">'+ state +'</a></li>');
-
-                    $('#data-inquiry').click(function(){
-                        window.location.href="download.php";
-                    });
                 });
             }
-        });
+        });*/
     });
 </script>
 
