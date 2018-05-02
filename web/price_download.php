@@ -29,7 +29,7 @@ foreach($states as $state){
     $tmp = array();
     $tmp['state'] = $state;
     foreach($r as $inquiryTime => $v){
-        if(!isset($r[$inquiryTime][$state])){
+        if(isset($r[$inquiryTime][$state])){
             $tmp[$inquiryTime] = $r[$inquiryTime][$state]['avg_price'];
         }else{
             $tmp[$inquiryTime] = 0;
