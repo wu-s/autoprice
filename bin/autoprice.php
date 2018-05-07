@@ -44,6 +44,16 @@ function run(){
     }
 
     $mailer->send($message);
+
+    //send price to aitracker
+    $rtn = array();
+    foreach($r1 as $row){
+        $rtn[$row['state']] = $row['avg_price'];
+    }
+//    print_r($rtn);
+    $aiTracker = new AiTracker();
+    $aiTracker->init($rtn);
+    $aiTracker->run();
 }
 
 function writeCsv($data, $fn){
