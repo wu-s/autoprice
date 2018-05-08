@@ -32,6 +32,12 @@ class AiTracker
         curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 0);
         curl_setopt($ch, CURLOPT_TIMEOUT, 90);
         $response = curl_exec($ch);
+        $tmp = array();
+        foreach($this->data as $state => $price){
+            $tmp[] = $state . '=' . $price;
+        }
+        print_r('url='.self::url);
+        print_r('params='.join('&', $tmp));
 //        echo '2222';
         error_log($response);
         $errNo = curl_errno($ch);
