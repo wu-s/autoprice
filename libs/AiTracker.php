@@ -23,23 +23,27 @@ class AiTracker
 
     public function run($dryRun = false)
     {
+        $tmp = array();
+        foreach($this->data as $state => $price){
+            $tmp[] = $state . '=' . $price;
+        }
+        $param = join(',', $tmp);
+
         $ch = curl_init();
         curl_setopt($ch, CURLOPT_URL, self::url);
         curl_setopt($ch, CURLOPT_HEADER, 0);
         curl_setopt($ch, CURLOPT_POST, 1);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-        curl_setopt($ch, CURLOPT_POSTFIELDS, $this->data);
+        curl_setopt($ch, CURLOPT_POSTFIELDS, $param);
         curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 0);
         curl_setopt($ch, CURLOPT_TIMEOUT, 90);
         $response = curl_exec($ch);
-        $tmp = array();
-        foreach($this->data as $state => $price){
-            $tmp[] = $state . '=' . $price;
-        }
-        print_r('url='.self::url);
-        print_r('params='.join('&', $tmp));
+
+        print_r('url='.self::url."\n");
+        print_r('prams='.$param."\n");
+        print_r('$response='.$response."\n");
 //        echo '2222';
-        error_log($response);
+//        error_log($response);
         $errNo = curl_errno($ch);
         if ($errNo) {
             $this->errNo = $errNo;
