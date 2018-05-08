@@ -27,7 +27,7 @@ class AiTracker
         foreach($this->data as $state => $price){
             $tmp[] = $state . '=' . $price;
         }
-        $param = join(',', $tmp);
+        $param = join('&', $tmp);
 
         $ch = curl_init();
         curl_setopt($ch, CURLOPT_URL, self::url);
