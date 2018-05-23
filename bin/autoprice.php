@@ -31,7 +31,7 @@ function run(){
     $mailer = new Swift_Mailer($transport);
     $message = (new Swift_Message('autoprice report'))
         ->setFrom(['214190413@qq.com' => 'John Doe'])
-        ->setTo(['2205935650@qq.com', ])
+        ->setTo(['2205935650@qq.com', 'keater@gmail.com', ])
         ->setBody('Here is the message itself')
     ;
     if($r1){
@@ -44,6 +44,16 @@ function run(){
     }
 
     $mailer->send($message);
+
+    //send price to aitracker
+    $rtn = array();
+    foreach($r1 as $row){
+        $rtn[$row['state']] = $row['avg_price'];
+    }
+//    print_r($rtn);
+    $aiTracker = new AiTracker();
+    $aiTracker->init($rtn);
+    $aiTracker->run();
 }
 
 function writeCsv($data, $fn){

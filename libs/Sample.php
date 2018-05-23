@@ -32,6 +32,14 @@ class Sample {
         $this->data = $result;
     }
 
+    public function getStates(){
+        $result = array();
+        foreach($this->data as $v){
+            $result[$v['State']] = 1;
+        }
+        return array_keys($result);
+    }
+
     public function getSampleData($limit = 20){
         $data = array();
         $rtn = array();
