@@ -8,6 +8,7 @@
 
 class Log {
     public static function debug($params){
-        print_r($params);
+        //print_r($params);
+        echo '[' . date('Y-m-d H:i:s') . '] ' . json_encode($params) . "\n";
     }
 } 

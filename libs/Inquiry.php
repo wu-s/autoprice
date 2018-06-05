@@ -82,7 +82,7 @@ class Inquiry {
             foreach($v as $row){
                 if($this->concurrency >= self::CONCURRENCY_NUM){
                     for($i = 0; $i < self::CONCURRENCY_NUM; $i ++){
-                        Log::debug("\n\n=================================\n\n");
+                        Log::debug("\n\n start \n\n");
                         $gotigay = $gotigayObjs[$i];
                         $gotigay->result();
                         $sth->execute($this->formatInquryRecord(self::TYPE_GOTITGUY, $gotigay));
