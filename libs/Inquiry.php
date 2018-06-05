@@ -13,7 +13,7 @@ class Inquiry {
     const TYPE_LEADGENESIS = 3;
     const TYPE_REALLYGREATRATE = 4;
 
-    const CONCURRENCY_NUM = 5;
+    const CONCURRENCY_NUM = 2;
 
     private $data;
     private $result = array();
