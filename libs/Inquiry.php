@@ -113,6 +113,7 @@ class Inquiry {
                 $realygreatrateObjs[$this->concurrency]->run($row, self::MOCK_MODE);
 
                 $this->concurrency ++;
+                sleep(1);
 //                break;
             }
 //            break;
